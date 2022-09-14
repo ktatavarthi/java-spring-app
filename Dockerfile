@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/openjdk-17:1.13 AS builder
+FROM registry.access.redhat.com/ubi8/openjdk-17:1.14 AS builder
 LABEL maintainer="IBM Java Engineering at IBM Cloud"
 
 USER root
@@ -24,10 +24,11 @@ USER 1001
 # Docker at the moment.
 # (https://github.com/ibmruntimes/ci.docker/tree/master/ibmjava/8/sfj/ubi-min)
 
-FROM registry.access.redhat.com/ubi8/openjdk-17:1.13
+FROM registry.access.redhat.com/ubi8/openjdk-17:1.14
 
 # disable vulnerable TLS algorithms
 USER root
+RUN microdnf update -y
 RUN sed -i 's/jdk.tls.disabledAlgorithms=/jdk.tls.disabledAlgorithms=SSLv2Hello, DES40_CBC, RC4_40, SSLv2, TLSv1, TLSv1.1, /g' /usr/lib/jvm/java-17/conf/security/java.security
 USER 1001
 
