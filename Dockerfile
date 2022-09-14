@@ -1,8 +1,8 @@
 FROM registry.access.redhat.com/ubi8/openjdk-17:1.13 AS builder
 LABEL maintainer="IBM Java Engineering at IBM Cloud"
 
-yum update -y
 USER root
+RUN microdnf update -y
 WORKDIR /app
 COPY pom.xml .
 RUN mvn -N wrapper:wrapper -Dmaven=3.8.4
@@ -26,11 +26,9 @@ USER 1001
 
 FROM registry.access.redhat.com/ubi8/openjdk-17:1.13
 
-yum upgrade -y
-
 # disable vulnerable TLS algorithms
 USER root
-RUN sed -i 's/jdk.tls.disabledAlgorithms=/jdk.tls.disabledAlgorithms=SSLv2Hello, DES40_CBC, RC4_40, SSLv2, TLSv1, TLSv1.1, /g' /etc/java/java-17-openjdk/java-17-openjdk-17.0.3.0.7-2.el8_6.x86_64/conf/security/java.security
+RUN sed -i 's/jdk.tls.disabledAlgorithms=/jdk.tls.disabledAlgorithms=SSLv2Hello, DES40_CBC, RC4_40, SSLv2, TLSv1, TLSv1.1, /g' /etc/java/java-17-openjdk/java-17-openjdk-17.0.4.1.1-2.el8_6.x86_64/conf/security/java.security
 USER 1001
 
 # Copy over app from builder image into the runtime image.
